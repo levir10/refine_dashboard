@@ -23,6 +23,7 @@ import EditPage from "./pages/company/edit";
 import List from "./pages/tasks/list";
 import CreateTask from "./pages/tasks/create";
 import EditTask from "./pages/tasks/edit";
+import { TaskProvider } from "./TaskContext";
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
                   liveMode: "auto",
                 }}
               >
+              <TaskProvider>
                 <Routes>
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
@@ -77,6 +79,8 @@ function App() {
                         </Route>
                       </Route>
                   </Routes>
+                  </TaskProvider>
+
 {/* oprion with no bug */}
 
                 {/* <Routes>

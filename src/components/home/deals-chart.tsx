@@ -35,7 +35,7 @@ const DealsChart = () => {
   //     try {
   //       const res = await fetch('http://localhost:3000');
   //       const data: ChartData = await res.json();
-  //       console.log('Fetched Data:', data.items);
+  //       console.log('Fetched Data:', data);
   //       setChartData(data); // Set the fetched data to state
   //     } catch (error) {
   //       console.error('Error fetching data:', error);
