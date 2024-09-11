@@ -10,6 +10,8 @@ const taskModel = require('./model/task'); // <-- Task Model
 const taskStageModel = require('./model/taskStages'); // <-- TaskStage Model
 const cors = require('cors');
 
+// Start the server
+const port = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -84,8 +86,8 @@ app.post('/tasks', async (req, res) => {
 
 
 // Start the server
-app.listen(3000, () => {
-    console.log('App is running on port 3000');
+app.listen(port, () => {
+    console.log('App is running on port PORT');
 });
 
 
