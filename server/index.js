@@ -36,14 +36,14 @@ app.get('/', async (req, res) => {
 // PUT Request - Update task's stage (by task's custom id)
 app.put('/tasks/:id', async (req, res) => {
     const taskId = req.params.id;  // This is the custom id (e.g., "8")
-    const { stageId } = req.body;  // This is the new stageId (e.g., "3")
+    const { title, description, dueDate, stageId, users, completed } = req.body;  // Get other task properties from the request body
 
     try {
         // Find and update the task by custom `id` (not the MongoDB `_id`)
         const updatedTask = await taskModel.findOneAndUpdate(
             { id: taskId },  // Use the custom `id` field to find the task
-            { stageId },     // Update the stageId
-            { new: true }    // Return the updated task
+            { title, description, dueDate, stageId, users, completed },  // Update task properties
+            { new: true }  // Return the updated task
         );
 
         if (!updatedTask) {
@@ -56,6 +56,7 @@ app.put('/tasks/:id', async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 // POST Request - Create new task
 app.post('/tasks', async (req, res) => {
@@ -82,6 +83,41 @@ app.post('/tasks', async (req, res) => {
     }
 });
 
+//DELETE elements-->MongoDB's findByIdAndDelete uses _id, not the custom id field 
+
+app.delete('/tasks/:id', async (req, res) => {
+    const taskId = req.params.id;
+
+    try {
+        // Find and delete task by the custom `id` field
+        const result = await taskModel.findOneAndDelete({ id: taskId });
+        if (!result) {
+            return res.status(404).send({ message: 'Task not found' });
+        }
+        res.status(200).send({ message: 'Task deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        res.status(500).send({ message: 'Server error' });
+    }
+});
+
+
+// GET Request - Fetch a single task by ID
+app.get('/tasks/:id', async (req, res) => {
+    const taskId = req.params.id;
+
+    try {
+        // Find a single task by ID
+        const task = await taskModel.findOne({ id: taskId }); // Adjust the query if needed
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+        return res.json(task);
+    } catch (error) {
+        console.error('Error fetching task:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 
 

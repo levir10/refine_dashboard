@@ -4,7 +4,7 @@ const TaskSchema = new mongoose.Schema({
     id:String,
     title: String,
     description: String,
-    dueDate: Date,
+    dueDate: String,//was date
     completed: Boolean,
     stageId: String,
     users: [

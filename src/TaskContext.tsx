@@ -24,11 +24,18 @@ type TaskStage = {
 };
 
 type TaskContextType = {
-  tasks: Task[];
-  stages: TaskStage[];
-  addTask: (newTask: Task) => void;
-  refreshTasks: () => void;
-};
+    tasks: Task[];
+    stages: TaskStage[];
+    addTask: (newTask: Task) => void;
+    deleteTaskFromContext: (taskId: string) => void; 
+    updateTask: (updatedTask: Task) => void; // <-- New function
+    refreshTasks: () => void;
+    selectedTaskId: string | null;
+    setSelectedTaskId: (id: string | null) => void;
+    openEditModal: (taskId: string) => void;
+    closeEditModal: () => void;
+  };
+
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
@@ -36,10 +43,11 @@ export const TaskProvider = ({ children }: React.PropsWithChildren) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [stages, setStages] = useState<TaskStage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const fetchTasks = async () => {
     try {
       const response = await axios.get('http://localhost:3000/');
+    //   const response = await axios.get('https://refine-dashboard-5.onrender.com/');
       setTasks(response.data.tasks);
       setStages(response.data.taskStages);
     } catch (error) {
@@ -52,7 +60,18 @@ export const TaskProvider = ({ children }: React.PropsWithChildren) => {
   const addTask = (newTask: Task) => {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
+  // Delete task from context------>
+  const deleteTaskFromContext = (taskId: string) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  };
+  // Delete task from context<------
 
+  // New function to update a specific task
+  const updateTask = (updatedTask: Task) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+    );
+  };
   const refreshTasks = () => {
     fetchTasks();
   };
@@ -61,8 +80,17 @@ export const TaskProvider = ({ children }: React.PropsWithChildren) => {
     fetchTasks();
   }, []);
 
+  const openEditModal = (taskId: string) => {
+    setSelectedTaskId(taskId);
+    // Any other actions to open modal
+  };
+
+  const closeEditModal = () => {
+    setSelectedTaskId(null);
+    // Any other actions to close modal
+  };
   return (
-    <TaskContext.Provider value={{ tasks, stages, addTask, refreshTasks }}>
+    <TaskContext.Provider value={{ tasks, stages, addTask,deleteTaskFromContext, updateTask, refreshTasks,selectedTaskId, setSelectedTaskId, openEditModal, closeEditModal }}>
       {!isLoading ? children :<PageSkeleton/>}
     </TaskContext.Provider>
   );

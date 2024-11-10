@@ -9,9 +9,10 @@ import React, { useMemo } from 'react';
 import { useNavigation } from '@refinedev/core';
 import axios from 'axios';
 import { useTasks } from 'TaskContext'; // Ensure correct path to the TaskContext
+import { AsyncClickHandler, SyncClickHandler } from '@refinedev/core/dist/hooks/export/types';
 
 const List = ({ children }: React.PropsWithChildren) => {
-  const { tasks, stages, refreshTasks } = useTasks(); // Use context instead of state
+  const { tasks, stages, refreshTasks,updateTask } = useTasks(); // Use context instead of state
   const { replace } = useNavigation();
 
   // Group tasks by stages
@@ -46,29 +47,34 @@ const List = ({ children }: React.PropsWithChildren) => {
     let stageId = event.over?.id as string | null;
     const taskId = event.active.id as string;
     const taskStageId = event.active.data.current?.stageId;
-
+  
     if (taskStageId === stageId) return;
-
+  
     if (stageId === 'unassigned') {
       stageId = null;
     }
-
-    // Optimistically update the UI by updating the task's stageId locally
-    const updatedTasks = tasks.map(task =>
-      task.id === taskId ? { ...task, stageId } : task
-    );
-
-    // Update task stage optimistically in the backend
+  
+    const taskToUpdate = tasks.find(task => task.id === taskId);
+    if (!taskToUpdate) return;
+  
+    // Create an optimistically updated task object
+    const updatedTask = { ...taskToUpdate, stageId };
+  
+    // Optimistically update the task in context
+    updateTask(updatedTask);
+  
+    // Send the update to the server
     axios.put(`http://localhost:3000/tasks/${taskId}`, { stageId })
       .then(() => {
-        refreshTasks(); // Refresh the task list after successful update
+        refreshTasks(); // Optionally refresh the task list after success
       })
       .catch((error) => {
         console.error('Error updating task stage:', error);
-        // Optionally handle any UI rollback here in case of error
+        // Roll back to previous state if the update fails
+        updateTask(taskToUpdate);
       });
   };
-
+  
   const formatDate = (date: Date) => {
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   };

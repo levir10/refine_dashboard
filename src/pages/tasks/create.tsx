@@ -21,7 +21,10 @@ const CreateTask = () => {
 
     try {
       const response = await axios.post('http://localhost:3000/tasks', {
+      // const response = await axios.post('https://refine-dashboard-5.onrender.com/tasks', {
         title: values.title,
+        description:"",
+        dueDate:new Date().toISOString(),
         stageId,
         completed: false,
         users: [],

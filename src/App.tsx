@@ -35,8 +35,8 @@ function App() {
             <DevtoolsProvider>
               <Refine
                 dataProvider={dataProvider}
-                liveProvider={liveProvider}
-                notificationProvider={useNotificationProvider}
+                // liveProvider={liveProvider}
+                // notificationProvider={useNotificationProvider}
                 routerProvider={routerBindings}
                 authProvider={authProvider}
                 resources={resources}//shows on the sidebar:"dashboards, conpanies,tasks..." from resources.tsx
