@@ -44,37 +44,38 @@ const List = ({ children }: React.PropsWithChildren) => {
 
   // Handle dragging and dropping tasks with optimistic UI
   const handleOnDragEnd = (event: DragEndEvent) => {
-    let stageId = event.over?.id as string | null;
-    const taskId = event.active.id as string;
-    const taskStageId = event.active.data.current?.stageId;
-  
-    if (taskStageId === stageId) return;
-  
-    if (stageId === 'unassigned') {
-      stageId = null;
-    }
-  
-    const taskToUpdate = tasks.find(task => task.id === taskId);
-    if (!taskToUpdate) return;
-  
-    // Create an optimistically updated task object
-    const updatedTask = { ...taskToUpdate, stageId };
-  
-    // Optimistically update the task in context
-    updateTask(updatedTask);
-  
-    // Send the update to the server
-    axios.put(`http://localhost:3000/tasks/${taskId}`, { stageId })
-      .then(() => {
-        refreshTasks(); // Optionally refresh the task list after success
-      })
-      .catch((error) => {
-        console.error('Error updating task stage:', error);
-        // Roll back to previous state if the update fails
-        updateTask(taskToUpdate);
-      });
-  };
-  
+  let stageId = event.over?.id as string | null;
+  const taskId = event.active.id as string;
+  const taskStageId = event.active.data.current?.stageId;
+
+  if (taskStageId === stageId) return;
+
+  if (stageId === 'unassigned') {
+    stageId = null;
+  }
+
+  const taskToUpdate = tasks.find(task => task.id === taskId);
+  if (!taskToUpdate) return;
+
+  // Create an optimistically updated task object
+  const updatedTask = { ...taskToUpdate, stageId };
+
+  // Optimistically update the task in context
+  updateTask(updatedTask);
+
+  // Send the update to the server
+  // axios.put(`http://localhost:3000/tasks/${taskId}`, { stageId })
+  axios.put(`https://refine-dashboard-5.onrender.com/tasks/${taskId}`, { stageId })
+    .then(() => {
+      refreshTasks(); // Optionally refresh the task list after success
+    })
+    .catch((error) => {
+      console.error('Error updating task stage:', error);
+      // Roll back to previous state if the update fails
+      updateTask(taskToUpdate);
+    });
+};
+
   const formatDate = (date: Date) => {
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   };

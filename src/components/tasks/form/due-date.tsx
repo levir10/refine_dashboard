@@ -30,7 +30,8 @@ export const DueDateForm = ({ initialValues, cancelForm }: Props) => {
       setIsSaving(true);
       try {
         // Make an API request to update the task description
-        await axios.put(`http://localhost:3000/tasks/${selectedTaskId}`, {
+        // await axios.put(`http://localhost:3000/tasks/${selectedTaskId}`, {
+        await axios.put(`https://refine-dashboard-5.onrender.com/tasks/${selectedTaskId}`, {
           dueDate: newDueDate,
         });
         refreshTasks(); // Refresh the tasks after updating

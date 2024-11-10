@@ -23,7 +23,8 @@ const TasksEditPage = () => {
       if (selectedTaskId) {
         setId(selectedTaskId);
         try {
-          const response = await axios.get(`http://localhost:3000/tasks/${selectedTaskId}`);
+          // const response = await axios.get(`http://localhost:3000/tasks/${selectedTaskId}`);
+          const response = await axios.get(`https://refine-dashboard-5.onrender.com/tasks/${selectedTaskId}`);
           setTaskData(response.data);
         } catch (error) {
           console.error("Error fetching task:", error);
@@ -38,7 +39,8 @@ const TasksEditPage = () => {
   const handleFinish = async (values: Task) => {
     // Update task in MongoDB
     try {
-      await axios.put(`http://localhost:3000/tasks/${values.id}`, values);
+      // await axios.put(`http://localhost:3000/tasks/${values.id}`, values);
+      await axios.put(`https://refine-dashboard-5.onrender.com/tasks/${values.id}`, values);
       list("tasks", "replace"); // Navigate back to task list
       close();
     } catch (error) {

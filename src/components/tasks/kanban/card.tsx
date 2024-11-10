@@ -235,8 +235,8 @@ const dropdownItems=useMemo(()=>{
               deleteTaskFromContext(id);
               
               // Perform the deletion on the backend
-            //   axios.delete(`https://refine-dashboard-5.onrender.com/tasks/${id}`)
-              axios.delete(`http://localhost:3000/tasks/${id}`)
+              axios.delete(`https://refine-dashboard-5.onrender.com/tasks/${id}`)
+            //   axios.delete(`http://localhost:3000/tasks/${id}`)
                 .then(() => {
                   // Optionally refresh tasks if needed
                   // refreshTasks();

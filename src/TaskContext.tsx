@@ -44,10 +44,11 @@ export const TaskProvider = ({ children }: React.PropsWithChildren) => {
   const [stages, setStages] = useState<TaskStage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/');
-    //   const response = await axios.get('https://refine-dashboard-5.onrender.com/');
+      // const response = await axios.get('http://localhost:3000/');
+      const response = await axios.get('https://refine-dashboard-5.onrender.com/');
       setTasks(response.data.tasks);
       setStages(response.data.taskStages);
     } catch (error) {
